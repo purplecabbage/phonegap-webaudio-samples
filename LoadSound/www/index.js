@@ -3,29 +3,48 @@
 document.addEventListener('DOMContentLoaded',onLoad);
 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
+var audioContext;
+// this is where we will store audio buffer data
+var myBuffer;
 
 function onLoad() {
     if(!AudioContext) {
         window.alert("WebAudio is not supported");
     }
     else {
-        var audioCtx = new AudioContext();
-        var oscillator = audioCtx.createOscillator();
-        oscillator.type = 'triangle';
-        // sine wave — other values are 'square', 'sawtooth', 'triangle' and 'custom'
-        oscillator.frequency.value = 880; // value in hertz
+        audioContext = new AudioContext();
+        btnLoadSound.onclick = function() {
+            dvStatusOut.innerText = "Loading ... ";
+            // Prime the Pump! ( I invented that term, really! )
+            var request = new XMLHttpRequest();
+            request.open('GET','../../Sounds/Shamisen-C4.wav', true);
+            request.responseType = 'arraybuffer';
+            // Decode is done asynchronously
+            request.onload = function() {
+                audioContext.decodeAudioData(request.response,
+                function(buffer) {
+                    myBuffer = buffer;
+                    dvStatusOut.innerText = "Ready";
+                },function(err){
+                    console.log("Error :: " + err);
+                });
+            };
+            request.send();
+        }
 
-        var gainNode = audioCtx.createGain();
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.start(0); // immediately
-
-        gainNode.gain.setValueAtTime(0.0, audioCtx.currentTime + 2);
-        gainNode.gain.setValueAtTime(1.0, audioCtx.currentTime + 3);
-
-        // oscillator.stop(audioCtx.currentTime + 2);
-        // // once stopped, it is desroyed
-        // oscillator.start(audioCtx.currentTime + 3);
+        btnPlaySound.onclick = function() {
+            dvStatusOut.innerText = "Playing ... ";
+            var source = audioContext.createBufferSource();
+            source.buffer = myBuffer;
+            source.connect(audioContext.destination);
+            source.start(0);
+            // or wait a second
+            //source.start(audioContext.currentTime + 1.0);
+            // or start at an offset, with a duration
+            //source.start(0,0.5,2);
+            source.addEventListener('ended',function() {
+                dvStatusOut.innerText = "Ready";
+            })
+        }
     }
 }

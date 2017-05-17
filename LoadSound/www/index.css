@@ -1,0 +1,50 @@
+
+* {
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin:0px 0px;
+    padding:0px 0px;
+    /* prevent callout to copy image, etc when tap to hold */
+    -webkit-touch-callout: none;
+    /* prevent webkit from resizing text to fit */
+    -webkit-text-size-adjust: none;
+    /* make transparent link selection, adjust last value opacity 0 to 1.0 */
+    -webkit-tap-highlight-color: rgba(255,255,255,0.1);
+    /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body {
+  background-color:#202;
+  margin:0 auto;
+}
+
+button {
+  border:solid 1px #808;
+  background-color:#101;
+  color:#808;
+  width:200px;
+  height:60px;
+  line-height: 60px;
+  font-size:24px;
+  margin:20px auto;
+  display:block;
+}
+
+button:active {
+    background-color:#808;
+    color:#101;
+}
+
+button:focus {
+  outline:0;
+  background-color:#303;
+}
+
+#dvStatusOut {
+  width:200px;
+  height:60px;
+  line-height: 60px;
+  color:#808;
+  margin:20px auto;
+}
