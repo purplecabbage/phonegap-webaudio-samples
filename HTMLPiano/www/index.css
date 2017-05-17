@@ -1,0 +1,96 @@
+
+
+body {
+    background-color:black;
+}
+
+.key
+{
+    border:solid 1px #333;
+    border-bottom-left-radius:6px;
+    border-bottom-right-radius:6px;
+
+    display:inline-block;
+
+}
+
+.keyRow
+{
+    position:relative;
+    margin-bottom:12px;
+}
+
+.key.spacer
+{
+    width:36px;
+    border:none 1px #CCC;
+}
+
+.whiteKeyRow
+{
+    left:0px;
+    top:0px;
+}
+
+.blackKeyRow
+{
+    position:absolute;
+    left:0px;
+    top:0px;
+    margin-left:20px;
+}
+
+#pianoPanel .whiteKey
+{
+    height:128px;
+    color:#AAA;
+    background-color:#aaa;
+    text-align:center;
+
+    vertical-align:text-bottom;
+
+    width:34px;
+    margin:0px 0px;
+    padding:0px 0px;
+    border:solid 1px #FFF;
+
+    background-image: -webkit-gradient(
+    	linear,
+    	left top,
+    	left bottom,
+    	color-stop(0, rgb(255,255,255)),
+    	color-stop(0.4, rgb(255,255,255)),
+    	color-stop(0.4, rgb(224,224,224)),
+    	color-stop(1, rgb(224,224,224))
+    );
+}
+
+#pianoPanel .whiteKey.hit
+{
+    background-color:#ccc;
+}
+
+#pianoPanel .blackKey
+{
+    width:34px;
+    margin:0px 0px;
+    height:68px;
+    color:#666;
+    background-color:#000;
+    border:solid 1px #111;
+
+/*    background-image: -webkit-gradient(
+    	linear,
+    	left top,
+    	left bottom,
+    	color-stop(0, rgb(36,36,36)),
+    	color-stop(0.4, rgb(36,36,36)),
+    	color-stop(0.4, rgb(0,0,0)),
+    	color-stop(1, rgb(0,0,0))
+    );*/
+}
+
+#pianoPanel .blackKey.hit
+{
+    background-color:#222;
+}
