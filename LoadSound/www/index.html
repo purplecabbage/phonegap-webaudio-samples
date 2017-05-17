@@ -3,13 +3,15 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-        <title>Blank App</title>
+        <title>Load Sound App</title>
         <link rel="stylesheet" href="index.css" />
     </head>
     <body>
+        <audio id='forFil' crossorigin="anonymous" src='sounds/BlueZedEx.mp3'>Audio</audio>
         <button id='btnLoadSound'>Load a Sound</button>
         <div id="dvStatusOut">Nothing is loaded</div>
         <button id='btnPlaySound'>Play the Sound</button>
+        <button id='btnPlayAudioTag'>Play &lt;audio&gt;</button>
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="index.js"></script>
     </body>

@@ -7,6 +7,8 @@ var audioContext;
 // this is where we will store audio buffer data
 var myBuffer;
 
+// var source = audioCtx.createMediaElementSource(myAudio);
+
 function onLoad() {
     if(!AudioContext) {
         window.alert("WebAudio is not supported");
@@ -44,7 +46,26 @@ function onLoad() {
             //source.start(0,0.5,2);
             source.addEventListener('ended',function() {
                 dvStatusOut.innerText = "Ready";
-            })
+            });
+        }
+
+        btnPlayAudioTag.onclick = function() {
+            dvStatusOut.innerText = "Playing ... ";
+            var synthDelay = audioContext.createDelay(5.0);
+            synthDelay.delayTime.value = 0.5;
+
+            var source = audioContext.createMediaElementSource(forFil);
+
+            source.connect(synthDelay);
+
+            var merger = audioContext.createChannelMerger(2);
+            synthDelay.connect(merger, 0, 1);
+            source.connect(merger, 0, 0);
+            merger.connect(audioContext.destination);
+            forFil.play();
+            source.addEventListener('ended',function() {
+                dvStatusOut.innerText = "Ready";
+            });
         }
     }
 }
