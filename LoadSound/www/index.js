@@ -17,7 +17,7 @@ function onLoad() {
             dvStatusOut.innerText = "Loading ... ";
             // Prime the Pump! ( I invented that term, really! )
             var request = new XMLHttpRequest();
-            request.open('GET','../../Sounds/Shamisen-C4.wav', true);
+            request.open('GET','sounds/Shamisen-C4.wav', true);
             request.responseType = 'arraybuffer';
             // Decode is done asynchronously
             request.onload = function() {
