@@ -40,10 +40,11 @@ function onLoad() {
         var elems = document.querySelectorAll('.key');
         elems.forEach( function(elem){
             //console.log(elem.dataset.notenumber);
-
-            elem.addEventListener(padHitEventName,onPianoKeyDown);
-            if(padHitEventName !== 'mouseup') {
-                elem.addEventListener(padReleaseEventName,onPianoKeyUp);
+            if(elem.dataset.notenumber) {
+                elem.addEventListener(padHitEventName,onPianoKeyDown);
+                if(padHitEventName !== 'mouseup') {
+                    elem.addEventListener(padReleaseEventName,onPianoKeyUp);
+                }
             }
         });
     }
@@ -54,14 +55,11 @@ function onPianoKeyDown(evt) {
         evt.currentTarget.addEventListener('mouseup',onPianoKeyUp);
     }
     piano.noteOn(parseInt(evt.currentTarget.dataset.notenumber) + 24);
-
 }
 
 function onPianoKeyUp(evt) {
     if(evt.type == "mouseup") {
         evt.currentTarget.removeEventListener('mouseup',onPianoKeyUp);
     }
-
     piano.noteOff(parseInt(evt.currentTarget.dataset.notenumber) + 24);
-    //console.log(evt.currentTarget.dataset.notenumber);
 }

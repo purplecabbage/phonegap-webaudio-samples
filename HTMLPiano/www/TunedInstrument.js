@@ -3,7 +3,7 @@
 (function(exports){
 
     var NumNotes = 128; // 128 midi notes from 0-127
-    var notes;
+    var notes = [];
 
     var AudioCtx = null;
 
@@ -20,20 +20,16 @@
       alert('Web Audio API is not supported in this browser ' + e.message);
     }
 
+    // Initialize note pitches using equal temperament (12-TET)
 
-// Initialize note pitches using equal temperament (12-TET)
-    notes = [];
-    for (var i = 0; i < NumNotes; i++)
-    {
+    for (var i = 0; i < NumNotes; i++) {
         notes[i] = {
             pitch:440 * Math.pow(2, (i - 69)/12.0), // A4 = MIDI key 69
         };
         //console.log(i + ":" + notes[i].pitch);
     }
 
-
-
-// define exportable interface
+    // define exportable interface
 
     var TunedInstrument = function(){
         this.audioContext = new AudioCtx();

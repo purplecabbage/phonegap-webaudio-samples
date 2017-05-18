@@ -21,8 +21,12 @@ Thumbs.db
 
 *.DS_Store
 
-app/platforms/
-app/plugins/
-app/hooks/
+*/platforms/
+*/plugins/
+*/hooks/
+*/node_modules/
+*/config.xml
+*/package.json
 
 .vscode/
+
