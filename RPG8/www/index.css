@@ -1,0 +1,88 @@
+
+
+body {
+    background-color:black;
+}
+
+.contentWrap
+{
+    padding-top:2px;
+    padding-bottom:2px;
+    background-color:#000;
+    height:320px;
+    width:320px;
+    margin:40px auto;
+}
+
+.key
+{
+    border:solid 1px #333;
+    border-bottom-left-radius:6px;
+    border-bottom-right-radius:6px;
+
+    display:inline-block;
+
+}
+
+.keyRow
+{
+    position:relative;
+    margin-bottom:12px;
+}
+
+.key.spacer
+{
+    width:36px;
+    border:none 1px #CCC;
+}
+
+.whiteKeyRow
+{
+    left:0px;
+    top:0px;
+}
+
+.blackKeyRow
+{
+    position:absolute;
+    left:0px;
+    top:0px;
+    margin-left:20px;
+}
+
+#pianoPanel .whiteKey
+{
+    height:128px;
+    color:#AAA;
+    background-color:#aaa;
+    text-align:center;
+
+    vertical-align:text-bottom;
+
+    width:34px;
+    margin:0px 0px;
+    padding:0px 0px;
+    border:solid 1px #FFF;
+
+}
+
+#pianoPanel .whiteKey.hit
+{
+    background-color:#F00;
+}
+
+#pianoPanel .blackKey
+{
+    width:34px;
+    margin:0px 0px;
+    height:68px;
+    color:#666;
+    background-color:#000;
+    border:solid 1px #111;
+
+}
+
+#pianoPanel .blackKey.hit
+{
+    background-color:#F00;
+}
