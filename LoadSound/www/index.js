@@ -51,11 +51,11 @@ function onLoad() {
 
         btnPlayAudioTag.onclick = function() {
             dvStatusOut.innerText = "Playing ... ";
+
             var synthDelay = audioContext.createDelay(5.0);
-            synthDelay.delayTime.value = 0.5;
+            synthDelay.delayTime.value = 0;
 
             var source = audioContext.createMediaElementSource(forFil);
-
             source.connect(synthDelay);
 
             var merger = audioContext.createChannelMerger(2);

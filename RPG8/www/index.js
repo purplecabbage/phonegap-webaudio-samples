@@ -6,12 +6,13 @@ var AudioContext = window.AudioContext || window.webkitAudioContext;
 var audioCtx;
 var oscNode;
 var osc2;
+var useOsc2 = false;
 var gainNode;
 var padHitEventName = "mousedown";
 var padReleaseEventName = "mouseup";
 var NumNotes = 128; // 128 midi notes from 0-127
 var notes = [];
-var tempo = 110; // EDM!
+var tempo = 140; // EDM!
 
 var downKeys = [];
 
@@ -34,6 +35,20 @@ function onLoad() {
     catch(ex) {
         // alert('Touch is not supported in this browser');
     }
+
+    // document.addEventListener("touchmove", function(e) {
+    //     e.preventDefault();
+    // });
+
+    cbUse2Osc.addEventListener('change',function(evt){
+        //window.alert(evt.currentTarget.checked);
+        useOsc2 = evt.currentTarget.checked;
+    });
+
+    rngTempo.addEventListener('change',function(evt) {
+        var val = evt.currentTarget.value;
+        tempo = val;
+    });
 
     if(!AudioContext) {
         window.alert("WebAudio is not supported");
@@ -87,7 +102,6 @@ function redraw() {
             osc2 = null;
         }
     }
-
     // set up to draw again
     requestAnimFrame(redraw);
 }
@@ -103,26 +117,33 @@ function playNote(transposedNote) {
     oscNode = audioCtx.createOscillator();
     oscNode.type = 'sine';
 
-    osc2 = audioCtx.createOscillator();
-    osc2.type = 'square';
+    if(useOsc2) {
+        osc2 = audioCtx.createOscillator();
+        osc2.type = 'square';
+    }
 
     // sine wave — other values are 'square', 'sawtooth', 'triangle' and 'custom'
     oscNode.frequency.value = notes[transposedNote].pitch; // value in hertz
 
     gainNode = audioCtx.createGain();
     oscNode.connect(gainNode);
-    osc2.connect(gainNode);
-    osc2.detune.value = 10;
-    osc2.frequency.value = notes[transposedNote-24].pitch;
+
+    if(useOsc2) {
+        osc2.connect(gainNode);
+        osc2.detune.value = 10;
+        osc2.frequency.value = notes[transposedNote-24].pitch;
+    }
 
     gainNode.connect(audioCtx.destination);
 
     oscNode.start(0);
-    osc2.start(0);
+    if(useOsc2) {
+        osc2.start(0);
+    }
+
 }
 
 function onPianoKeyDown(evt) {
-
     var transposedNote = parseInt(evt.currentTarget.dataset.notenumber) + 36;
 
     var noteIndex = downKeys.indexOf(transposedNote);
@@ -136,6 +157,4 @@ function onPianoKeyDown(evt) {
         downKeys.push(transposedNote);
         evt.currentTarget.className = evt.currentTarget.className + '  hit';
     }
-
-
 }

@@ -7,7 +7,6 @@
 
     var AudioCtx = null;
 
-
     try {
 
       AudioCtx =  'webkitAudioContext' in window ? webkitAudioContext :
@@ -88,12 +87,9 @@
 
         },
         noteOff:function(noteNum){
-
         }
-
     };
 
     exports.TunedInstrument = TunedInstrument;
-
 
 })(window);
