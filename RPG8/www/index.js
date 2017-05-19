@@ -11,7 +11,7 @@ var padHitEventName = "mousedown";
 var padReleaseEventName = "mouseup";
 var NumNotes = 128; // 128 midi notes from 0-127
 var notes = [];
-var tempo = 140; // EDM!
+var tempo = 110; // EDM!
 
 var downKeys = [];
 
@@ -49,24 +49,6 @@ function onLoad() {
         }
 
         audioCtx = new AudioContext();
-        oscNode = audioCtx.createOscillator();
-        oscNode.type = 'sine';
-
-        osc2 = audioCtx.createOscillator();
-        osc2.type = 'square';
-
-        // sine wave — other values are 'square', 'sawtooth', 'triangle' and 'custom'
-        oscNode.frequency.value = 440; // value in hertz
-
-        gainNode = audioCtx.createGain();
-        oscNode.connect(gainNode);
-        osc2.connect(gainNode);
-        osc2.detune.value = 10;
-
-        gainNode.connect(audioCtx.destination);
-        gainNode.gain.value = 0;
-        oscNode.start(0);
-        osc2.start(0);
 
         var elems = document.querySelectorAll('.key');
         elems.forEach( function(elem){
@@ -74,7 +56,6 @@ function onLoad() {
                 elem.addEventListener(padHitEventName,onPianoKeyDown);
             }
         });
-
         redraw();
     }
 }
@@ -84,7 +65,7 @@ var lastTimeDrawn = -1;
 function redraw() {
 
     if(downKeys.length > 0) {
-        var secondsPerBeat = 60.0 / tempo; // locked on 16ths
+        var secondsPerBeat = 60.0 / tempo / 4; // locked on 16ths
         var currentTime = audioCtx.currentTime;
         var dT = currentTime - lastTimeDrawn;
         if(dT > secondsPerBeat ) {
@@ -93,19 +74,51 @@ function redraw() {
             lastIndexDrawn =  lastIndexDrawn % downKeys.length;
 
             var transposedNote = downKeys[lastIndexDrawn];
-            oscNode.frequency.value = notes[transposedNote].pitch;
-
-            osc2.frequency.value = notes[transposedNote-24].pitch;
-            gainNode.gain.value = 0.8;
-
+            playNote(transposedNote);
         }
     }
     else {
-        gainNode.gain.value = 0;
+        if(oscNode) {
+            oscNode.stop(0);
+            oscNode = null;
+        }
+        if(osc2) {
+            osc2.stop(0);
+            osc2 = null;
+        }
     }
 
     // set up to draw again
     requestAnimFrame(redraw);
+}
+
+function playNote(transposedNote) {
+    if(oscNode) {
+        oscNode.stop(0);
+    }
+    if(osc2) {
+        osc2.stop(0);
+    }
+
+    oscNode = audioCtx.createOscillator();
+    oscNode.type = 'sine';
+
+    osc2 = audioCtx.createOscillator();
+    osc2.type = 'square';
+
+    // sine wave — other values are 'square', 'sawtooth', 'triangle' and 'custom'
+    oscNode.frequency.value = notes[transposedNote].pitch; // value in hertz
+
+    gainNode = audioCtx.createGain();
+    oscNode.connect(gainNode);
+    osc2.connect(gainNode);
+    osc2.detune.value = 10;
+    osc2.frequency.value = notes[transposedNote-24].pitch;
+
+    gainNode.connect(audioCtx.destination);
+
+    oscNode.start(0);
+    osc2.start(0);
 }
 
 function onPianoKeyDown(evt) {

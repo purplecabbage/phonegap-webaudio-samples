@@ -68,7 +68,7 @@ body {
 
 #pianoPanel .whiteKey.hit
 {
-    background-color:#F00;
+    background-color:#808;
 }
 
 #pianoPanel .blackKey
@@ -84,5 +84,5 @@ body {
 
 #pianoPanel .blackKey.hit
 {
-    background-color:#F00;
+    background-color:#808;
 }
