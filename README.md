@@ -1,5 +1,7 @@
 # phonegap-webaudio-samples
 Examples for a talk at PhoneGap day
+as seen in Amsterdam in May 2017
+and New York City, October 2017
 
 Live here:
 
