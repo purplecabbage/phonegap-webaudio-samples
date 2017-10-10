@@ -92,6 +92,10 @@ div.cb {
     font-size:24px;
 }
 
+input[type=button] {
+    width:200px;
+}
+
 
 
 

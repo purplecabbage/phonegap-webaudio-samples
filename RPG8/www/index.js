@@ -12,7 +12,8 @@ var padHitEventName = "mousedown";
 var padReleaseEventName = "mouseup";
 var NumNotes = 128; // 128 midi notes from 0-127
 var notes = [];
-var tempo = 140; // EDM!
+var tempo = 100;
+var drumBuffer;
 
 var downKeys = [];
 
@@ -39,6 +40,14 @@ function onLoad() {
     // document.addEventListener("touchmove", function(e) {
     //     e.preventDefault();
     // });
+
+    btnPanic.addEventListener("click",function(e){
+        downKeys = [];
+        document.querySelectorAll('.hit').forEach(function(elem){
+            var className = elem.className.split(' hit').join("");
+            elem.className = className;
+        });
+    });
 
     cbUse2Osc.addEventListener('change',function(evt){
         //window.alert(evt.currentTarget.checked);
@@ -72,24 +81,55 @@ function onLoad() {
             }
         });
         redraw();
+
+        tempoSelect.addEventListener('change',function(e){
+            console.log(e.target.value);
+            rngTempo.value = parseInt(e.target.value);
+            tempo = parseInt(e.target.value);
+        });
     }
+
+    // load a bassdrum
+    var request = new XMLHttpRequest();
+    request.open('GET','../../Sounds/BTAA0DA.WAV', true);
+    request.responseType = 'arraybuffer';
+    // Decode is done asynchronously
+    request.onload = function() {
+        audioCtx.decodeAudioData(request.response,
+        function(buffer) {
+            drumBuffer = buffer;
+        },function(err){
+            console.log("Error :: " + err);
+        });
+    };
+    request.send();
 }
 
 var lastIndexDrawn = -1;
 var lastTimeDrawn = -1;
+var beatCounter = -1;
 function redraw() {
 
     if(downKeys.length > 0) {
-        var secondsPerBeat = 60.0 / tempo / 4; // locked on 16ths
+        var hitsPerBeat = 60.0 / tempo / 4; // locked on 16ths
         var currentTime = audioCtx.currentTime;
         var dT = currentTime - lastTimeDrawn;
-        if(dT > secondsPerBeat ) {
+        if(dT > hitsPerBeat ) {
             lastTimeDrawn = currentTime;
             lastIndexDrawn++;
             lastIndexDrawn =  lastIndexDrawn % downKeys.length;
 
             var transposedNote = downKeys[lastIndexDrawn];
             playNote(transposedNote);
+            beatCounter++
+            if(beatCounter % 4 == 0) {
+                beatCounter = 0;
+                // 4 on the floor
+                var source = audioCtx.createBufferSource();
+                source.buffer = drumBuffer;
+                source.connect(audioCtx.destination);
+                source.start(0);
+            }
         }
     }
     else {
@@ -101,6 +141,7 @@ function redraw() {
             osc2.stop(0);
             osc2 = null;
         }
+        beatCounter = -1;
     }
     // set up to draw again
     requestAnimFrame(redraw);
@@ -119,7 +160,7 @@ function playNote(transposedNote) {
 
     if(useOsc2) {
         osc2 = audioCtx.createOscillator();
-        osc2.type = 'square';
+        osc2.type = 'sawtooth';
     }
 
     // sine wave — other values are 'square', 'sawtooth', 'triangle' and 'custom'

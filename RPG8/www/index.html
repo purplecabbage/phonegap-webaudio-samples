@@ -51,11 +51,27 @@
         </div>
 
         <div class='cb'>
+            <input type="button" value="Panic!" id="btnPanic"/>
+            <br/>
             <input type="checkbox" id="cbUse2Osc">Use 2 Oscillators</input>
             <br/>
-            <input type="range"  min="40" max="200" id="rngTempo" value="140">Tempo</input>
+            <input type="range"  min="40" max="280" id="rngTempo" value="100">Tempo</input>
+            <br/>
+            <select id="tempoSelect">
+                    <option value="40">40: Slow poke</option>
+                    <option value="80">80: We Jammin'</option>
+                    <option value="100" selected>100: Easy Man</option>
+                    <option value="140">140: Wub Wub</option>
+                    <option value="160">160: Are you crazy?</option>
+                    <option value="200">200: Clearly Hostile</option>
+                    <option value="240">240: Whoa, that's too much</option>
+                    <option value="280">280: You're on your own</option>
+            </select>
+
         </div>
         <!--<script type="text/javascript" src="cordova.js"></script>-->
+
+
         <script type="text/javascript" src="index.js"></script>
     </body>
 </html>
