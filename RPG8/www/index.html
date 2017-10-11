@@ -50,22 +50,46 @@
 
         </div>
 
-        <div class='cb'>
+        <div class='controls'>
             <input type="button" value="Panic!" id="btnPanic"/>
+            <br/>
+            <label for="arpMode">Mode:</label>
+            <select id="arpMode">
+                    <option value="0" selected>As Played</option>
+                    <option value="1">Up</option>
+                    <option value="2">Down</option>
+                    <option value="3">Up Down</option>
+            </select>
+            <br/>
+            <label for="osc1Wave">High Osc:</label>
+            <select id="osc1Wave">
+                    <option value="sine" selected>Sine</option>
+                    <option value="square">Square</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="sawtooth">Sawtooth</option>
+            </select>
+            <br/>
+            <label for="osc2Wave">Low Osc:</label>
+            <select id="osc2Wave">
+                    <option value="sine">Sine</option>
+                    <option value="square" selected>Square</option>
+                    <option value="triangle">Triangle</option>
+                    <option value="sawtooth">Sawtooth</option>
+            </select>
             <br/>
             <input type="checkbox" id="cbUse2Osc">Use 2 Oscillators</input>
             <br/>
-            <input type="range"  min="40" max="280" id="rngTempo" value="100">Tempo</input>
+            <label for="rngTempo">Tempo:</label>
+            <input type="range"  min="40" max="260" id="rngTempo" value="100"/>
             <br/>
             <select id="tempoSelect">
-                    <option value="40">40: Slow poke</option>
-                    <option value="80">80: We Jammin'</option>
-                    <option value="100" selected>100: Easy Man</option>
-                    <option value="140">140: Wub Wub</option>
-                    <option value="160">160: Are you crazy?</option>
-                    <option value="200">200: Clearly Hostile</option>
-                    <option value="240">240: Whoa, that's too much</option>
-                    <option value="280">280: You're on your own</option>
+                <option value="40">40: Slow poke</option>
+                <option value="80">80: We Jammin'</option>
+                <option value="100" selected>100: Easy Man</option>
+                <option value="140">140: Wub Wub</option>
+                <option value="160">160: Are you crazy?</option>
+                <option value="200">200: Clearly Hostile</option>
+                <option value="260">260: You're on your own</option>
             </select>
 
         </div>

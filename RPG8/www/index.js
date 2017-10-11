@@ -14,8 +14,11 @@ var NumNotes = 128; // 128 midi notes from 0-127
 var notes = [];
 var tempo = 100;
 var drumBuffer;
+var topWaveForm = "sine";
+var bottomWaveForm = "square";
 
 var downKeys = [];
+var noteQueue = [];
 
 window.requestAnimFrame = window.requestAnimationFrame ||
                           window.webkitRequestAnimationFrame ||
@@ -37,12 +40,9 @@ function onLoad() {
         // alert('Touch is not supported in this browser');
     }
 
-    // document.addEventListener("touchmove", function(e) {
-    //     e.preventDefault();
-    // });
-
     btnPanic.addEventListener("click",function(e){
         downKeys = [];
+        noteQueue = [];
         document.querySelectorAll('.hit').forEach(function(elem){
             var className = elem.className.split(' hit').join("");
             elem.className = className;
@@ -50,26 +50,26 @@ function onLoad() {
     });
 
     cbUse2Osc.addEventListener('change',function(evt){
-        //window.alert(evt.currentTarget.checked);
         useOsc2 = evt.currentTarget.checked;
     });
 
     rngTempo.addEventListener('change',function(evt) {
-        var val = evt.currentTarget.value;
-        tempo = val;
+        tempo = evt.currentTarget.value;
     });
+
+    arpMode.addEventListener('change',(evt)=>{
+        recalcNoteQueue();
+    })
 
     if(!AudioContext) {
         window.alert("WebAudio is not supported");
     }
     else {
-
         for (var i = 0; i < NumNotes; i++) {
             // A4 = MIDI key 69
             notes[i] = {
                 pitch:440 * Math.pow(2, (i - 69)/12.0)
             };
-            //console.log(i + ":" + notes[i].pitch);
         }
 
         audioCtx = new AudioContext();
@@ -80,13 +80,23 @@ function onLoad() {
                 elem.addEventListener(padHitEventName,onPianoKeyDown);
             }
         });
-        redraw();
+
+        osc1Wave.addEventListener('change',()=>{
+            topWaveForm = event.target.value;
+        });
+
+        osc2Wave.addEventListener('change',()=>{
+            bottomWaveForm = event.target.value;
+        });
+
 
         tempoSelect.addEventListener('change',function(e){
             console.log(e.target.value);
             rngTempo.value = parseInt(e.target.value);
             tempo = parseInt(e.target.value);
         });
+
+        redraw();
     }
 
     // load a bassdrum
@@ -108,19 +118,20 @@ function onLoad() {
 var lastIndexDrawn = -1;
 var lastTimeDrawn = -1;
 var beatCounter = -1;
+
 function redraw() {
 
-    if(downKeys.length > 0) {
+    if(noteQueue.length > 0) {
+        console.log(noteQueue);
         var hitsPerBeat = 60.0 / tempo / 4; // locked on 16ths
         var currentTime = audioCtx.currentTime;
         var dT = currentTime - lastTimeDrawn;
         if(dT > hitsPerBeat ) {
             lastTimeDrawn = currentTime;
             lastIndexDrawn++;
-            lastIndexDrawn =  lastIndexDrawn % downKeys.length;
+            lastIndexDrawn =  lastIndexDrawn % noteQueue.length;
 
-            var transposedNote = downKeys[lastIndexDrawn];
-            playNote(transposedNote);
+            playNote(noteQueue[lastIndexDrawn]);
             beatCounter++
             if(beatCounter % 4 == 0) {
                 beatCounter = 0;
@@ -156,11 +167,12 @@ function playNote(transposedNote) {
     }
 
     oscNode = audioCtx.createOscillator();
-    oscNode.type = 'sine';
+
+    oscNode.type = topWaveForm;
 
     if(useOsc2) {
         osc2 = audioCtx.createOscillator();
-        osc2.type = 'sawtooth';
+        osc2.type = bottomWaveForm;
     }
 
     // sine wave — other values are 'square', 'sawtooth', 'triangle' and 'custom'
@@ -170,9 +182,12 @@ function playNote(transposedNote) {
     oscNode.connect(gainNode);
 
     if(useOsc2) {
-        osc2.connect(gainNode);
+        var gainNode2 = audioCtx.createGain();
+        osc2.connect(gainNode2);
         osc2.detune.value = 10;
-        osc2.frequency.value = notes[transposedNote-24].pitch;
+        osc2.frequency.value = notes[transposedNote-12].pitch;
+        gainNode2.gain.value = 0.7;
+        gainNode2.connect(audioCtx.destination);
     }
 
     gainNode.connect(audioCtx.destination);
@@ -193,9 +208,35 @@ function onPianoKeyDown(evt) {
         var className =  evt.currentTarget.className;
         className = className.split(' hit').join("");
         evt.currentTarget.className = className;
+
     }
     else {
         downKeys.push(transposedNote);
         evt.currentTarget.className = evt.currentTarget.className + '  hit';
     }
+    recalcNoteQueue();
+}
+
+function recalcNoteQueue() {
+    switch (arpMode.value) {
+        case '0' : // as played
+            // just copy the keys
+            noteQueue = downKeys.slice();
+            break;
+        case '1' : // up
+            noteQueue = downKeys.slice().sort();
+            break;
+        case '2' : // down
+            noteQueue = downKeys.slice().sort().reverse();
+            break;
+        case '3' : // up+down
+            noteQueue = downKeys.slice().sort();
+            var reversedNotes = noteQueue.slice().reverse();
+            reversedNotes.shift(); // the last note is not repeated
+            reversedNotes.pop(); // the first note is not repeated
+            noteQueue = noteQueue.concat(reversedNotes);
+            break;
+
+    }
+
 }
